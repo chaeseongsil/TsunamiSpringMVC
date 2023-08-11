@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<!-- Root Context: defines shared resources visible to all other web components -->
+	<!-- DB와 관련된 것들 -->
+	<!-- DBCP만들기 -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		<!-- 필드 초기화해서 의존성을 주입하는 방식(setter 메소드 이용) -->
+		<!-- 해당 set메소드의 매개변수가 String이면 value를 사용함 -->
+		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" ></property>
+		<property name="url" 			 value="jdbc:oracle:thin:@localhost:1521:xe" ></property>
+		<property name="username" 		 value="SPRING"></property>
+		<property name="password" 		 value="SPRING"></property>
+	</bean>
+	<!-- 공장만들기 -->
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="configLocation" value="classpath:mybatis-config.xml"></property>
+		<property name="dataSource" ref="dataSource"></property> <!-- 위에꺼 등록 -->	
+	</bean>
+	<!-- 연결만들기 -->
+	<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg ref="sqlSession"></constructor-arg>
+	</bean>
+</beans>
