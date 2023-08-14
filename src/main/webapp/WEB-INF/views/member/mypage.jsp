@@ -6,7 +6,7 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>마이페이지</title>
-		<link rel="stylesheet" href="../resources/css/main.css">
+		<link rel="stylesheet" href="..../resources/css/main.css">
 	</head>
 	<body>
 		<h1>마이페이지</h1>

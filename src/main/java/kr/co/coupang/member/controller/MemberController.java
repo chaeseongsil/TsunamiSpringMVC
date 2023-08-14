@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import kr.co.coupang.member.domain.Member;
 import kr.co.coupang.member.service.MemberService;
@@ -64,6 +65,74 @@ public class MemberController {
 		}
 	}
 	
+	@RequestMapping(value="/member/update.do", method=RequestMethod.GET)
+	public String modifyViewMember(
+			@RequestParam("memberId") String memberId
+			,Model model) {
+		try {
+			Member member = service.showOneById(memberId);
+			if(member != null) {
+				model.addAttribute("member", member);
+				return "member/modify";
+			}else {
+				model.addAttribute("msg", "데이터 조회에 실패하였습니다.");
+				return "common/errorPage";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			model.addAttribute("msg", "회원 정보를 가져오지 못했습니다.ㅠ");
+			return "common/errorPage";
+		}
+	}
+
+	@RequestMapping(value="/member/update.do", method=RequestMethod.POST)
+	public String modifyMember(
+			@RequestParam("memberId") String memberId
+			, @RequestParam("memberPw") String memberPw
+			, @RequestParam("memberEmail") String memberEmail
+			, @RequestParam("memberPhone") String memberPhone
+			, @RequestParam("memberAddr") String memberAddr
+			, @RequestParam("memberHobby") String memberHobby
+			, RedirectAttributes redirect
+			, Model model) {
+		try {
+			Member member = new Member(memberId, memberPw, memberEmail, memberPhone, memberAddr, memberHobby);
+			int result = service.modifyMember(member);
+			if(result > 0) {
+				redirect.addAttribute("memberId", memberId);
+				// redirect시 쿼리스트링 붙이는법
+				return "redirect:/member/mypage.do";
+			}else {
+				model.addAttribute("msg", "회원 정보 수정 실패~ㅠ");
+				return "common/errorPage";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			model.addAttribute("msg", e.getMessage());
+			return "common.errorPage";
+		}
+	}
+
+	@RequestMapping(value="/member/delete.do", method=RequestMethod.GET)
+	public String removeMember(
+			@RequestParam("memberId") String memberId
+			, Model model
+			) {
+		try {
+			int result = service.removeMember(memberId);
+			if(result > 0) {
+				return "redirect:/member/logout.do";
+			}else {
+				model.addAttribute("msg", "탈퇴를 완료하지 못함~");
+				return "common/errorPage";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			model.addAttribute("msg", e.getMessage());
+			return "common/errorPage";
+		}
+	}
+
 	@RequestMapping(value="/member/login.do", method=RequestMethod.POST)
 	public String memberLogin(
 			HttpServletRequest request
@@ -137,63 +206,6 @@ public class MemberController {
 			e.printStackTrace();
 			model.addAttribute("msg", e.getMessage());
 			return "common/errorPage";
-		}
-	}
-	@RequestMapping(value="/member/delete.do", method=RequestMethod.GET)
-	public String removeMember(
-			@RequestParam("memberId") String memberId
-			, Model model
-			) {
-		try {
-			int result = service.removeMember(memberId);
-			if(result > 0) {
-				return "redirect:/member/logout.do";
-			}else {
-				model.addAttribute("msg", "탈퇴를 완료하지 못함~");
-				return "common/errorPage";
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			model.addAttribute("msg", e.getMessage());
-			return "common/errorPage";
-		}
-	}
-	@RequestMapping(value="/member/update.do", method=RequestMethod.GET)
-	public String modifyViewMember(
-			@RequestParam("memberId") String memberId
-			,Model model) {
-		try {
-			Member member = service.showOneById(memberId);
-			model.addAttribute("member", member);
-			return "member/modify";
-		} catch (Exception e) {
-			e.printStackTrace();
-			model.addAttribute("msg", "회원 정보를 가져오지 못했습니다.ㅠ");
-			return "common/errorPage";
-		}
-	}
-	@RequestMapping(value="/member/update.do", method=RequestMethod.POST)
-	public String modifyMember(
-			@RequestParam("memberId") String memberId
-			, @RequestParam("memberPw") String memberPw
-			, @RequestParam("memberEmail") String memberEmail
-			, @RequestParam("memberPhone") String memberPhone
-			, @RequestParam("memberAddr") String memberAddr
-			, @RequestParam("memberHobby") String memberHobby
-			, Model model) {
-		try {
-			Member member = new Member(memberId, memberPw, memberEmail, memberPhone, memberAddr, memberHobby);
-			int result = service.modifyMember(member);
-			if(result > 0) {
-				return "redirect:/member/mypage.do";
-			}else {
-				model.addAttribute("msg", "회원 정보 수정 실패~ㅠ");
-				return "common/errorPage";
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			model.addAttribute("msg", e.getMessage());
-			return "common.errorPage";
 		}
 	}
 }

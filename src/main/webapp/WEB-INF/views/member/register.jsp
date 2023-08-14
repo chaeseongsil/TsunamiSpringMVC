@@ -5,7 +5,7 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>회원 가입</title>
-		<link rel="stylesheet" href="../resources/css/main.css">
+		<link rel="stylesheet" href="..../resources/css/main.css">
 	</head>
 	<body>
 		<h1>회원가입</h1>

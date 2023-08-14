@@ -6,7 +6,7 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>Spring MVC</title>
-		<link rel="stylesheet"  href="/resources/css/main.css">
+		<link rel="stylesheet"  href="../resources/css/main.css">
 	</head>
 	<body>
 		<h1>환영합니다~๑•‿•๑</h1>
